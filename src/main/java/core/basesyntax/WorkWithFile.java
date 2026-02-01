@@ -7,12 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-    private static final String supply = "supply";
-    private static final String buys = "buy";
-    private static final String results = "result";
-    private static final String delimiter = ",";
-    private static final int operations = 0;
-    private static final int amounts = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String DELIMITER = ",";
+    private static final int OPERATIONS = 0;
+    private static final int AMOUNTS = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         long[] sums = readAndCalculate(fromFileName);
@@ -34,17 +34,17 @@ public class WorkWithFile {
                 }
 
                 String[] parts = splitLine(line);
-                String operation = parts[operations].trim();
-                long amount = parseAmount(parts[amounts]);
+                String operation = parts[OPERATIONS].trim();
+                long amount = parseAmount(parts[AMOUNTS]);
 
-                if (operation.equals(supply)) {
+                if (operation.equals(SUPPLY)) {
                     supplySum += amount;
-                } else if (operation.equals(buys)) {
+                } else if (operation.equals(BUY)) {
                     buySum += amount;
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file" + fromFileName, e);
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
         return new long[] {supplySum, buySum};
     }
@@ -53,21 +53,21 @@ public class WorkWithFile {
         long result = supplySum - buySum;
 
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(toFileName))) {
-            writeLine(writer, supply, supplySum);
-            writeLine(writer, buys, buySum);
-            writeLine(writer, results, result);
+            writeLine(writer, SUPPLY, supplySum);
+            writeLine(writer, BUY, buySum);
+            writeLine(writer, RESULT, result);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file " + toFileName, e);
+            throw new RuntimeException("Can't write file " + toFileName, e);
         }
     }
 
     private void writeLine(BufferedWriter writer, String key, long value) throws IOException {
-        writer.write(key + delimiter + value);
+        writer.write(key + DELIMITER + value);
         writer.newLine();
     }
 
     private String[] splitLine(String line) {
-        String[] parts = line.split(delimiter);
+        String[] parts = line.split(DELIMITER);
         if (parts.length != 2) {
             throw new RuntimeException("Invalid line format: " + line);
         }
